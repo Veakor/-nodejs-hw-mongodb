@@ -10,7 +10,8 @@
     "add-one": "node src/scripts/addOneContact.js",
     "count": "node src/scripts/countContacts.js",
     "thanos": "node src/scripts/thanos.js",
-    "remove-all": "node src/scripts/removeAllContacts.js"
+    "remove-all": "node src/scripts/removeAllContacts.js",
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
