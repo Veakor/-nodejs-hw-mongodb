@@ -5,7 +5,7 @@ import { ENV_VARS } from '../constants/constants.js';
 export const initMongoConnection = async () => {
   const connectionLink = `mongodb+srv://${env(ENV_VARS.MONGODB_USER)}:${env(
     ENV_VARS.MONGODB_PASSWORD,
-  )}@${env(ENV_VARS.MONGODB_URL)}/ ${env(
+  )}@${env(ENV_VARS.MONGODB_URL)}/${env(
     ENV_VARS.MONGODB_DB,
   )}?retryWrites=true&w=majority&appName=Students`;
 
