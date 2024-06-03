@@ -1,4 +1,9 @@
-import { PATH_DB } from './constants/constants.js';
+import { setupServer } from './server.js';
+import { initMongoConnection } from './db/initMongoConnection.js';
 
-console.log(PATH_DB);
-console.log('Hello!');
+const bootstrap = async () => {
+  await initMongoConnection();
+  setupServer();
+};
+
+bootstrap();
