@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 
+
 import { env } from "./utils/env.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
