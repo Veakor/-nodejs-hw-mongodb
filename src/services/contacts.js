@@ -1,4 +1,4 @@
-import { Contact } from '../db/models/contact.js';
+import { Contact } from '../db/modal/contact.js';
 
 export const getAllContacts = () => {
   return Contact.find();
