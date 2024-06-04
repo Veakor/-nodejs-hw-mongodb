@@ -5,13 +5,7 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "get-all": "node src/scripts/getAllContacts.js",
-    "generate": "node src/scripts/generateContacts.js",
-    "add-one": "node src/scripts/addOneContact.js",
-    "count": "node src/scripts/countContacts.js",
-    "thanos": "node src/scripts/thanos.js",
-    "remove-all": "node src/scripts/removeAllContacts.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +17,7 @@
     "globals": "^15.1.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "http-errors": "^2.0.0"
   }
