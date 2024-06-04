@@ -6,7 +6,7 @@ import {
   upsertsContact,
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
-import { isValidContactId } from '../middleware/isValidContactId.js';
+import { isValidContactId } from './middleware/isValidContactId.js';
 
 export const getContactsController = async (req, res) => {
   const contacts = await getAllContacts();
