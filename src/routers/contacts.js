@@ -11,25 +11,19 @@ import {
 
 const contactsRouter = Router();
 
-contactsRouter.get('/contacts', ctrlWrapper(getContactsController));
+contactsRouter.get('/', ctrlWrapper(getContactsController));
 
-contactsRouter.get(
-  '/contacts/:contactId',
-  ctrlWrapper(getContactByIdController),
+contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController),
 );
 
-contactsRouter.post('/contacts', ctrlWrapper(createContactController));
+contactsRouter.post('/', ctrlWrapper(createContactController));
 
-contactsRouter.put('/contacts/:contactId', ctrlWrapper(putContactController));
+contactsRouter.put('/:contactId', ctrlWrapper(putContactController));
 
-contactsRouter.patch(
-  '/contacts/:contactId',
-  ctrlWrapper(patchContactController),
+contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController),
 );
 
-contactsRouter.delete(
-  '/contacts/:contactId',
-  ctrlWrapper(deleteContactByIdController),
+contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactByIdController),
 );
 
 export default contactsRouter;

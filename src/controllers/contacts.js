@@ -18,13 +18,19 @@ export const getContactsController = async (req, res) => {
   });
 };
 
-export const getContactByIdController = async (req, res) => {
+export const getContactByIdController = async (req, res,next) => {
+  try{
   const contactId = isValidContactId(req, res);
 
   const contact = await getContactById(contactId);
 
   if (!contact) {
-    throw createHttpError(404, { message: 'Contact not found' });
+    throw createHttpError(404, {
+
+      status: 404,
+      message: 'Not Found',
+      data: { message: 'Contact not found' }
+    });
   }
 
   res.json({
@@ -32,6 +38,9 @@ export const getContactByIdController = async (req, res) => {
     message: `Successfully found contact with id ${contactId}!`,
     data: contact,
   });
+}catch (error) {
+    next(error); 
+  }
 };
 
 export const createContactController = async (req, res) => {
@@ -45,14 +54,19 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res) => {
+export const patchContactController = async (req, res, next) => {
+  try{
   const { body } = req;
   const contactId = isValidContactId(req, res);
 
   const contact = await upsertsContact(contactId, body);
 
-  if (contact) {
-    throw createHttpError(404, { message: 'Contact not found' });
+  if (!contact) {
+    throw createHttpError(404, {
+      status: 404,
+      message: 'Not Found',
+      data: { message: 'Contact not found' }
+    });
   }
 
   const status = contact.isNew ? 201 : 200;
@@ -62,6 +76,9 @@ export const patchContactController = async (req, res) => {
     message: 'Successfully patched a contact!',
     data: contact.result,
   });
+} catch (error) {
+  next(error);
+}
 };
 
 export const putContactController = async (req, res) => {
@@ -85,14 +102,22 @@ export const putContactController = async (req, res) => {
   });
 };
 
-export const deleteContactByIdController = async (req, res) => {
+export const deleteContactByIdController = async (req, res, next) => {
+  try{
   const contactId = isValidContactId(req, res);
 
   const contact = await deleteContactById(contactId);
 
   if (!contact) {
-    throw createHttpError(404, { message: 'Contact not found' });
+    throw createHttpError(404, {
+      status: 404,
+      message: 'Not Found',
+      data: { message: 'Contact not found' }
+    });
   }
 
   res.status(204).send();
+} catch (error) {
+  next(error);
+}
 };
