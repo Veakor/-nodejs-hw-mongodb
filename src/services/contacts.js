@@ -14,20 +14,13 @@ export const createContact = (payload) => {
   return contact;
 };
 
-export const upsertsContact = async (id, payload, options = {}) => {
-  const result = await Contact.findByIdAndUpdate(id, payload, {
-    new: true,
-    includesResultMetadata: true,
-    ...options,
-  });
+export const upsertsContact = async (contactId, updateData) => {
+  const contact = await Contact.findByIdAndUpdate(contactId, updateData, { new: true });
 
-  return {
-    result,
-    isNew: !result?.lastErrorObject?.updatedExisting,
-  };
+  return contact;
 };
 
 export const deleteContactById = async (contactId) => {
-  const result = await Contact.findByIdAndDelete(contactId);
-  return result;
+  const contact = await Contact.findByIdAndDelete(contactId);
+  return contact;
 };

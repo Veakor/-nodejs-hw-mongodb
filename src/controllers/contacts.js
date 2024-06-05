@@ -54,8 +54,7 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res, next) => {
-  try{
+export const patchContactController = async (req, res) => {
   const { body } = req;
   const contactId = isValidContactId(req, res);
 
@@ -69,16 +68,11 @@ export const patchContactController = async (req, res, next) => {
     });
   }
 
-  const status = contact.isNew ? 201 : 200;
-
-  res.status(status).json({
-    status,
+  res.status(200).json({
+    status:200,
     message: 'Successfully patched a contact!',
-    data: contact.result,
+    data: contact,
   });
-} catch (error) {
-  next(error);
-}
 };
 
 export const putContactController = async (req, res) => {
@@ -102,8 +96,7 @@ export const putContactController = async (req, res) => {
   });
 };
 
-export const deleteContactByIdController = async (req, res, next) => {
-  try{
+export const deleteContactByIdController = async (req, res) => {
   const contactId = isValidContactId(req, res);
 
   const contact = await deleteContactById(contactId);
@@ -117,7 +110,4 @@ export const deleteContactByIdController = async (req, res, next) => {
   }
 
   res.status(204).send();
-} catch (error) {
-  next(error);
-}
 };
