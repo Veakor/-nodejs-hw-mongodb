@@ -18,9 +18,9 @@ export const getContactsController = async (req, res) => {
   });
 };
 
-export const getContactByIdController = async (req, res,next) => {
-  try{
-  const contactId = isValidContactId(req, res);
+export const getContactByIdController = async (req, res) => {
+
+  const contactId = isValidContactId(req);
 
   const contact = await getContactById(contactId);
 
@@ -38,9 +38,6 @@ export const getContactByIdController = async (req, res,next) => {
     message: `Successfully found contact with id ${contactId}!`,
     data: contact,
   });
-}catch (error) {
-    next(error); 
-  }
 };
 
 export const createContactController = async (req, res) => {
