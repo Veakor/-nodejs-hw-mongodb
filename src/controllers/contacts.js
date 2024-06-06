@@ -20,7 +20,7 @@ export const getContactsController = async (req, res) => {
 
 export const getContactByIdController = async (req, res) => {
 
-  const contactId = isValidContactId(req);
+  const contactId = isValidContactId(req,res);
 
   const contact = await getContactById(contactId);
 

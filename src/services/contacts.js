@@ -4,8 +4,8 @@ export const getAllContacts = () => {
   return Contact.find();
 };
 
-export const getContactById = async (contactId) => {
-  const contact = await Contact.findById(contactId);
+export const getContactById =  (id) => {
+  const contact = Contact.findById(id);
   return contact;
 };
 
@@ -14,16 +14,20 @@ export const createContact = (payload) => {
   return contact;
 };
 
-export const upsertsContact = async (contactId, body, options ={}) => {
-  const contact = await Contact.findByIdAndUpdate(contactId, body, {
+export const upsertsContact = async (id, payload, options ={}) => {
+  const result = await Contact.findByIdAndUpdate(id, payload, {
     new: true,
-    upsert: false,
+    includesResultMetadata: true,
     ...options,
   });
-  return contact ? { result: contact, isNew: false } : null;
+  return {
+    result,
+    isNew: !result?.lastErrorObject?.updatedExisting,
+  };
 };
 
+
 export const deleteContactById = async (contactId) => {
-  const contact = await Contact.findByIdAndDelete(contactId);
-  return contact;
+  const result = await Contact.findByIdAndDelete(contactId);
+  return result;
 };
