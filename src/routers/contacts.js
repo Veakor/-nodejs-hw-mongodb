@@ -19,7 +19,7 @@ contactsRouter.post('/', ctrlWrapper(createContactController));
 
 contactsRouter.put('/:contactId', ctrlWrapper(putContactController));
 
-contactsRouter.patch('/:contactId', ctrlWrapper(patchContactController));
+contactsRouter.patch('/:http://localhost:3000/contacts/60d5ec49f1e4e91f8c8b4567', ctrlWrapper(patchContactController));
 
 contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactByIdController));
 

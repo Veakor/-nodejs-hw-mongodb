@@ -51,7 +51,7 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res) => {
+export const patchContactController = async (req, res, next) => {
   const { body } = req;
   const contactId = isValidContactId(req, res);
 
