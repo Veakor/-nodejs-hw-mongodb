@@ -53,20 +53,28 @@ export const createContactController = async (req, res) => {
 
 export const patchContactController = async (req, res, next) => {
   const { body } = req;
-  const contactId = isValidContactId(req, res);
+  const { contactId } = req.params;
 
-  const contact = await upsertsContact(contactId, body);
+  if (!mongoose.isValidObjectId(contactId)) {
+    return next(createHttpError(400, {
+      status: 400,
+      message: 'Invalid contact ID',
+      data: { message: 'Invalid contact ID' }
+    }));
+  }
+
+  const contact = await Contact.findByIdAndUpdate(contactId, body, { new: true });
 
   if (!contact) {
-    throw createHttpError(404, {
+    return next(createHttpError(404, {
       status: 404,
       message: 'Not Found',
       data: { message: 'Contact not found' }
-    });
+    }));
   }
 
   res.status(200).json({
-    status:200,
+    status: 200,
     message: 'Successfully patched a contact!',
     data: contact,
   });
