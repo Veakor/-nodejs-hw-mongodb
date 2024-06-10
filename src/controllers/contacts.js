@@ -13,7 +13,7 @@ export const getContactsController = async (req, res, next) => {
   const contacts = await getAllContacts();
 
   if (!contacts) {
-    throw createHttpError(404, "not found")
+      throw createHttpError(404, 'Contacts not found');
   }
 
   res.json({
