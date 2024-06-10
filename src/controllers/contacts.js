@@ -8,14 +8,26 @@ import {
 import createHttpError from 'http-errors';
 import { isValidContactId } from '../middlewares/isValidContactId.js';
 
-export const getContactsController = async (req, res) => {
-  const contacts = await
+export const getContactsController = async (req, res, next) => {
+  try{
+  const contacts = await getAllContacts();
+
+  if (!contacts) {
+    throw createHttpError(404, {
+      status: 404,
+      message: 'Not Found',
+      data: { message: 'Contacts not found' }
+    });
+  }
 
   res.json({
     status: 200,
     message: 'Successfully found contacts!',
     data: contacts,
   });
+} catch (error) {
+  next(error);
+}
 };
 
 export const getContactByIdController = async (req, res) => {
