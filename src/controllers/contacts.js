@@ -9,7 +9,7 @@ import createHttpError from 'http-errors';
 import { isValidContactId } from '../middlewares/isValidContactId.js';
 
 export const getContactsController = async (req, res) => {
-  const contacts = await getAllContacts();
+  const contacts = await
 
   res.json({
     status: 200,
