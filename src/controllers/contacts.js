@@ -7,23 +7,30 @@ import {
 } from '../services/contacts.js';
 import createHttpError from 'http-errors';
 import { isValidContactId } from '../middlewares/isValidContactId.js';
-
+import { parsePaginationPrams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { parseFilterParams } from '../utils/parseFilterParams.js';
 export const getContactsController = async (req, res, next) => {
-  try{
-  const contacts = await getAllContacts();
+  
+  const { page, perPage } = parsePaginationPrams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
 
-  if (!contacts) {
-      throw createHttpError(404, 'Contacts not found');
-  }
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
 
   res.json({
     status: 200,
     message: 'Successfully found contacts!',
     data: contacts,
   });
-} catch (error) {
-  next(error);
-}
+
 };
 
 export const getContactByIdController = async (req, res) => {
