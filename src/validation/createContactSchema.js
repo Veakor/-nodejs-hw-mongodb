@@ -13,5 +13,5 @@ export const createContactSchema = Joi.object({
     'string.max': 'Maximum string length exceeded!',
   }),
   isFavourite: Joi.boolean(),
-  contactType: Joi.string().valid('work', 'home', 'personal'),
+  contactType: Joi.string().valid('work', 'home', 'personal').required()
 });

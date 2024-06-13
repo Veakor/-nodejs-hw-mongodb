@@ -11,7 +11,7 @@ import { parsePaginationPrams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 export const getContactsController = async (req, res, next) => {
-  
+  try{
   const { page, perPage } = parsePaginationPrams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
@@ -24,13 +24,18 @@ export const getContactsController = async (req, res, next) => {
     filter,
   });
 
+  if (!contacts) {
+    throw createHttpError(404, "Contacts not found");
+  }
 
-  res.json({
+res.json({
     status: 200,
     message: 'Successfully found contacts!',
     data: contacts,
   });
-
+} catch (error) {
+  next(error);
+}
 };
 
 export const getContactByIdController = async (req, res) => {

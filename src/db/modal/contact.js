@@ -18,5 +18,12 @@ const contactSchema = new Schema(
     versionKey: false,
   },
 );
+// Визначення константи SORT_ORDER
+const SORT_ORDER = {
+  ASC: 'asc',
+  DESC: 'desc',
+};
 
+// Експорт моделі контакту і SORT_ORDER
 export const Contact = model('contacts', contactSchema);
+export { SORT_ORDER };
