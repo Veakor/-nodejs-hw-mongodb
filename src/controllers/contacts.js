@@ -79,13 +79,15 @@ export const patchContactController = async (req, res, next) => {
   const contact = await upsertsContact(contactId, body);
 
   if (!contact) {
-    throw createHttpError(404, {
-      status: 404,
-      message: 'Not Found',
-      data: { message: 'Contact not found' }
-    });
+    throw createHttpError(404, 'Not Found');
   }
-} catch (error){
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully patched a contact!',
+    data: contact,
+  });
+} catch (error) {
   next(error);
 }
 };
