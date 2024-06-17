@@ -16,7 +16,7 @@ export const getContactsController = async (req, res, next) => {
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
 
-  const {contacts} = await getAllContacts({
+  const contacts = await getAllContacts({
     page,
     perPage,
     sortBy,
@@ -24,19 +24,10 @@ export const getContactsController = async (req, res, next) => {
     filter,
   });
 
-  const totalPages = Math.ceil(perPage);
-
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: {
-        data: contacts,
-        page,
-        perPage,
-        totalPages,
-        hasPreviousPage: page > 1,
-        hasNextPage: page < totalPages,
-      },
+      data: contacts,
     });
   } catch (error) {
     next(error);
@@ -86,7 +77,7 @@ export const patchContactController = async (req, res, next) => {
 
   const contact = await upsertsContact(contactId, body);
 
-  if (!contact) {
+  if (!contact.result) {
     throw createHttpError(404, 'Not Found');
   }
 
