@@ -16,7 +16,7 @@ export const getContactsController = async (req, res, next) => {
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
 
-  const contacts = await getAllContacts({
+  const {contacts, totalItem} = await getAllContacts({
     page,
     perPage,
     sortBy,
@@ -24,18 +24,24 @@ export const getContactsController = async (req, res, next) => {
     filter,
   });
 
-  if (!contacts) {
-    throw createHttpError(404, "Contacts not found");
-  }
+  const totalPages = Math.ceil(totalItems / perPage);
 
-res.json({
-    status: 200,
-    message: 'Successfully found contacts!',
-    data: contacts,
-  });
-} catch (error) {
-  next(error);
-}
+    res.json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: {
+        data: contacts,
+        page,
+        perPage,
+        totalItems,
+        totalPages,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < totalPages,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getContactByIdController = async (req, res) => {
