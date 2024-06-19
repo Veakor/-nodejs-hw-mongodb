@@ -13,6 +13,14 @@ export const getAllContacts = async ({
   const skip = (page - 1) * perPage;
   const contactQuery = Contact.find();
 
+  if (filter.contactType) {
+    contactQuery.where('contactType').equals(filter.contactType);
+  }
+  if (filter.isFavourite) {
+    contactQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+
+
 const [contactCount, contacts] = await Promise.all([
   Contact.find().merge(contactQuery).countDocuments(),
   Contact.find()
