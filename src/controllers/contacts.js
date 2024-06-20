@@ -4,7 +4,7 @@ import {
   getAllContacts,
   getContactById,
   upsertsContact,
-} from '../services/contacts.js';
+} from '../servies/contacts.js';
 import createHttpError from 'http-errors';
 import { isValidContactId } from '../middleware/isValidContactId.js';
 import { parsePaginationPrams } from '../utils/parsePaginationParams.js';
