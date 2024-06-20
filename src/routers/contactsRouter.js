@@ -9,7 +9,7 @@ import {
   putContactController,
 } from '../controllers/contacts.js';
 
-import { validateBody } from '../middlewares/validateBody.js';
+import { validateBody } from '../middleware/validateBody.js';
 import{ createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { ROLES } from '../constants/constants.js';
