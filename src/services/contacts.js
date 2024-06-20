@@ -16,15 +16,15 @@ export const getAllContacts = async ({
   if (filter.contactType) {
     contactQuery.where('contactType').equals(filter.contactType);
   }
-  if (filter.isFavourite ) {
+  if (typeof filter.isFavourite === 'boolean') {
     contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
  
+  try{
 
 const [contactCount, contacts] = await Promise.all([
-  Contact.find().merge(contactQuery).countDocuments(),
-  Contact.find()
-    .merge(contactQuery)
+  contactQuery.clone().countDocuments(),
+  contactQuery
     .skip(skip)
     .limit(limit)
     .sort({ [sortBy]: sortOrder })
@@ -33,10 +33,16 @@ const [contactCount, contacts] = await Promise.all([
 
   const paginationData = createPaginationData(contactCount, perPage, page);
 
+  console.log('Contacts found:', contacts); 
+
   return {
     data: contacts,
     ...paginationData,
   };
+} catch (error) {
+    console.error('Error fetching contacts:', error);
+    throw error;
+  }
 };
 
 export const getContactById =  (id) => {
