@@ -19,8 +19,61 @@ export const getAllContacts = async ({
   if (typeof filter.isFavourite === 'boolean') {
     contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
+
+  const [contactCount, contacts] = await Promise.all([
+    Contact.find().merge(contactQuery).countDocuments(),
+    Contact.find()
+      .merge(contactQuery)
+      .skip(skip)
+      .limit(limit)
+      .sort({ [sortBy]: sortOrder })
+      .exec(),
+  ]);
+
+  const paginationData = createPaginationData(contactCount, perPage, page);
+
+  const result = {
+    contacts, // Масив контактів
+    totalItems: contactCount, // Загальна кількість елементів
+    ...paginationData,
+  };
+
+  return result;
+};
+
+export const getContactsController = async (req, res, next) => {
+  try {
+    const { page, perPage } = parsePaginationPrams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query);
+    const filter = parseFilterParams(req.query);
+
+    const { contacts, totalItems, totalPages, hasPreviousPage, hasNextPage } = await getAllContacts({
+      page,
+      perPage,
+      sortBy,
+      sortOrder,
+      filter,
+    });
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: {
+        data: contacts, // Масив контактів
+        page,
+        perPage,
+        totalItems,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
  
-  try{
+ /*try{
 
 const [contactCount, contacts] = await Promise.all([
   Contact.find().merge(contactQuery).countDocuments(),
@@ -71,4 +124,4 @@ export const upsertsContact = async (id, payload, options ={}) => {
 export const deleteContactById = async (contactId) => {
   const result = await Contact.findByIdAndDelete(contactId);
   return result;
-};
+};*/
