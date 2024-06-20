@@ -17,7 +17,7 @@ export const getContactsController = async (req, res, next) => {
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
 
-  const { data: contacts, totalItems } = await getAllContacts({ page, perPage, sortBy, sortOrder, filter });
+  const { data: totalItems } = await getAllContacts({ page, perPage, sortBy, sortOrder, filter });
 
   const paginationData = createPaginationData(totalItems, perPage, page);
 
