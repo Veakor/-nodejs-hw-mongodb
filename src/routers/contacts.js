@@ -12,19 +12,52 @@ import {
 import { validateBody } from '../middlewares/validateBody.js';
 import{ createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
+import { ROLES } from '../constants/constants.js';
+import { checkRoles } from '../middleware/checkRoles.js';
+import { authenticate } from '../middleware/authenticate.js';
+
 
 const contactsRouter = Router();
 
-contactsRouter.get('/', ctrlWrapper(getContactsController));
+contactsRouter.use('/', authenticate);
 
-contactsRouter.get('/:contactId', ctrlWrapper(getContactByIdController));
+contactsRouter.get(
+  '/',
+  checkRoles(ROLES.ADMIN),
+  ctrlWrapper(getContactsController),
+);
 
-contactsRouter.post('/',validateBody(createContactSchema), ctrlWrapper(createContactController));
+contactsRouter.get(
+  '/:contactId',
+  checkRoles(ROLES.ADMIN, ROLES.USER),
+  ctrlWrapper(getContactByIdController),
+);
 
-contactsRouter.put('/:contactId',validateBody(createContactSchema), ctrlWrapper(putContactController));
+contactsRouter.post(
+  '/',
+  checkRoles(ROLES.ADMIN),
+  validateBody(createContactSchema),
+  ctrlWrapper(createContactController),
+);
 
-contactsRouter.patch('/:contactId',validateBody(updateContactSchema), ctrlWrapper(patchContactController));
+contactsRouter.put(
+  '/:contactId',
+  checkRoles(ROLES.ADMIN),
+  validateBody(createContactSchema),
+  ctrlWrapper(putContactController),
+);
 
-contactsRouter.delete('/:contactId', ctrlWrapper(deleteContactByIdController));
+contactsRouter.patch(
+  '/:contactId',
+  checkRoles(ROLES.ADMIN, ROLES.USER),
+  validateBody(updateContactSchema),
+  ctrlWrapper(patchContactController),
+);
+
+contactsRouter.delete(
+  '/:contactId',
+  checkRoles(ROLES.ADMIN),
+  ctrlWrapper(deleteContactByIdController),
+);
 
 export default contactsRouter;

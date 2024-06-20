@@ -12,18 +12,11 @@ const contactSchema = new Schema(
       require: false,
       default: 'personal',
     },
+    userId: { type: Schema.Types.ObjectId, require: true },
   },
   {
     timestamps: true,
     versionKey: false,
   },
 );
-// Визначення константи SORT_ORDER
-const SORT_ORDER = {
-  ASC: 'asc',
-  DESC: 'desc',
-};
-
-// Експорт моделі контакту і SORT_ORDER
 export const Contact = model('contacts', contactSchema);
-export { SORT_ORDER };
