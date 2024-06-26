@@ -43,7 +43,7 @@ export const getAllContacts = async ({
 };
 
 export const getContactById = (id) => {
-  const contact = Contact.findById(id);
+  const contact = Contact.findOne(id);
   return contact;
 };
 
