@@ -1,7 +1,8 @@
 import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 import { ROLES } from '../../constants/constants.js';
 
-const userSchema = new Schema(
+const userSchema = new mongoose. Schema(
   {
     name: { type: String, require: true },
     email: { type: String, require: true, unique: true },
@@ -24,4 +25,4 @@ userSchema.methods.toJSON = function () {
   return object;
 };
 
-export const User = model('users', userSchema);
+export const User = mongoose.model('users', userSchema);
