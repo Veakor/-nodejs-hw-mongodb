@@ -54,7 +54,7 @@ export const createContact = (payload, userId) => {
 };
 
 export const upsertsContact = async (id, payload, options = {}) => {
-  const result = await Contact.findByIdAndUpdate(id, payload, {
+  const result = await Contact.findOneAndUpdate(id, payload, {
     new: true,
     includesResultMetadata: true,
     ...options,
@@ -67,6 +67,6 @@ export const upsertsContact = async (id, payload, options = {}) => {
 };
 
 export const deleteContactById = async (contactId) => {
-  const result = await Contact.findByIdAndDelete(contactId);
+  const result = await Contact.findOneAndDelete(contactId);
   return result;
 };
