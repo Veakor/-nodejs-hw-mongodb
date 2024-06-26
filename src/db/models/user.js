@@ -1,23 +1,14 @@
 
 import mongoose from 'mongoose';
-import { ROLES } from '../../constants/constants.js';
 
-const userSchema = new mongoose. Schema(
-  {
-    name: { type: String, require: true },
-    email: { type: String, require: true, unique: true },
-    password: { type: String, require: true },
-    role: {
-      type: String,
-      default: ROLES.USER,
-      enum: [ROLES.USER, ROLES.ADMIN],
-    },
-  },
-  {
-    timestamps: true,
-    versionKey: false,
-  },
-);
+
+const userSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
+});
 
 userSchema.methods.toJSON = function () {
   const object = this.toObject();

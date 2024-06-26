@@ -6,6 +6,7 @@ import {
   registerUser,
 } from '../servies/auth.js';
 
+
 const setupSession = (res, session) => {
   res.cookie('sessionId', session._id, {
     httpOnly: true,

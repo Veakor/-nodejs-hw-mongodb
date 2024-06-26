@@ -1,8 +1,9 @@
-import { Schema, model } from 'mongoose';
 
-const sessionSchema = new Schema(
+import mongoose from 'mongoose';
+
+const sessionSchema = new mongoose. Schema(
   {
-    userId: { type: Schema.ObjectId, require: true, unique: true },
+    userId: { type: mongoose.Schema.ObjectId, require: true, unique: true },
     accessToken: { type: String, require: true },
     refreshToken: { type: String, require: true },
     accessTokenValidUntil: { type: Date, require: true },
@@ -14,4 +15,4 @@ const sessionSchema = new Schema(
   },
 );
 
-export const Session = model('sessions', sessionSchema);
+export const Session = mongoose. model('sessions', sessionSchema);
