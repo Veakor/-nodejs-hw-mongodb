@@ -1,7 +1,9 @@
-import { SORT_ORDER } from '../constants/constants.js';
+import { CLOUDINARY, SORT_ORDER } from '../constants/constants.js';
 import { Contact } from '../db/models/contact.js';
 import { createPaginationData } from '../utils/createPaginationData.js';
-
+import { env } from '../utils/env.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 export const getAllContacts = async ({
   page = 1,
   perPage = 10,
@@ -13,7 +15,7 @@ export const getAllContacts = async ({
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
-  const contactQuery = Contact.find();
+  const contactQuery = Contact.find({ userId });
 
   if (filter.contactType) {
     contactQuery.where('contactType').equals(filter.contactType);
@@ -23,7 +25,7 @@ export const getAllContacts = async ({
     contactQuery.where('isFavourite').equals(filter.isFavourite);
   }
 
-  contactQuery.where('parentId').equals(userId);
+  contactQuery.where('userId').equals(userId);
 
   const [contactCount, contacts] = await Promise.all([
     Contact.find().merge(contactQuery).countDocuments(),
@@ -42,31 +44,49 @@ export const getAllContacts = async ({
   };
 };
 
-export const getContactById = (id) => {
-  const contact = Contact.findOne(id);
+export const getContactById = (contactId, userId) => {
+  const contact = Contact.findOne({ _id: contactId, userId });
   return contact;
 };
 
-export const createContact = (payload, userId) => {
-  const contact = Contact.create({ ...payload, userId: userId });
+export const createContact = async ({ photo, ...payload }, userId) => {
+  let photoUrl;
 
-  return contact;
-};
+  if (env(CLOUDINARY.ENABLE_CLOUDINARY) === 'true') {
+    photoUrl = await saveFileToCloudinary(photo);
+  } else {
+    photoUrl = await saveFileToUploadDir(photo);
+  }
 
-export const upsertsContact = async (id, payload, options = {}) => {
-  const result = await Contact.findOneAndUpdate(id, payload, {
-    new: true,
-    includesResultMetadata: true,
-    ...options,
+  const contact = Contact.create({
+    ...payload,
+    userId: userId,
+    photo: photoUrl.url,
   });
 
-  return {
-    result,
-    isNew: !result?.lastErrorObject?.updatedExisting,
-  };
+  return contact;
 };
 
-export const deleteContactById = async (contactId) => {
-  const result = await Contact.findOneAndDelete(contactId);
+export const upsertsContact = async (
+  contactId,
+  userId,
+  payload,
+  options = {},
+) => {
+  const result = await Contact.findByIdAndUpdate(
+    { _id: contactId, userId },
+    payload,
+    {
+      new: true,
+      includesResultMetadata: true,
+      ...options,
+    },
+  );
+
+  return result;
+};
+
+export const deleteContactById = async (contactId, userId) => {
+  const result = await Contact.findByIdAndDelete({ _id: contactId, userId });
   return result;
 };

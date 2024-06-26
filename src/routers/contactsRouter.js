@@ -12,7 +12,6 @@ import {
 import { validateBody } from '../middleware/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
-import { checkRoles } from '../middleware/checkRoles.js';
 import { authenticate } from '../middleware/authenticate.js';
 import { isValidContactId } from '../middleware/isValidContactId.js';
 import { upload } from '../middleware/multerUpload.js';
@@ -21,6 +20,9 @@ import { upload } from '../middleware/multerUpload.js';
 const contactsRouter = Router();
 
 contactsRouter.use('/', authenticate);
+
+contactsRouter.use('./:contactId', isValidContactId('contactId'));
+
 
 contactsRouter.get(
   '/',
