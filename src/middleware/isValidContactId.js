@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 
 export const isValidContactId = (req,res) => {
-  const { contactId } = req.params;
+  const {contactId } = req.params;
 
   if (mongoose.isValidObjectId(contactId)) {
     return contactId;

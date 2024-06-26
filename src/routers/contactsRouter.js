@@ -19,11 +19,11 @@ import { upload } from '../middleware/multerUpload.js';
 
 const contactsRouter = Router();
 
-contactsRouter.use('/', authenticate);
+
 
 contactsRouter.use('./:contactId', isValidContactId('contactId'));
 
-
+contactsRouter.use('/', authenticate);
 contactsRouter.get(
   '/',
   ctrlWrapper(getContactsController),
@@ -44,7 +44,7 @@ contactsRouter.post(
 contactsRouter.put(
   '/:contactId',
   upload.single('photo'),
-  validateBody(createContactSchema),
+  validateBody(updateContactSchema),
   ctrlWrapper(putContactController),
 );
 
