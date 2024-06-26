@@ -23,40 +23,34 @@ contactsRouter.use('/', authenticate);
 
 contactsRouter.get(
   '/',
-  checkRoles(ROLES.ADMIN),
   ctrlWrapper(getContactsController),
 );
 
 contactsRouter.get(
   '/:contactId',
-  checkRoles(ROLES.ADMIN, ROLES.USER),
   ctrlWrapper(getContactByIdController),
 );
 
 contactsRouter.post(
   '/',
-  checkRoles(ROLES.ADMIN),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 contactsRouter.put(
   '/:contactId',
-  checkRoles(ROLES.ADMIN),
   validateBody(createContactSchema),
   ctrlWrapper(putContactController),
 );
 
 contactsRouter.patch(
   '/:contactId',
-  checkRoles(ROLES.ADMIN, ROLES.USER),
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );
 
 contactsRouter.delete(
   '/:contactId',
-  checkRoles(ROLES.ADMIN),
   ctrlWrapper(deleteContactByIdController),
 );
 
