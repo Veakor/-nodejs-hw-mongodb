@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+
 import mongoose from 'mongoose';
 import { ROLES } from '../../constants/constants.js';
 
