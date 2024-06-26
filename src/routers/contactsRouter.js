@@ -1,4 +1,5 @@
 import { Router } from 'express';
+
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
   createContactController,
@@ -8,13 +9,13 @@ import {
   patchContactController,
   putContactController,
 } from '../controllers/contacts.js';
-
 import { validateBody } from '../middleware/validateBody.js';
-import{ createContactSchema } from '../validation/createContactSchema.js';
+import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
-import { ROLES } from '../constants/constants.js';
 import { checkRoles } from '../middleware/checkRoles.js';
 import { authenticate } from '../middleware/authenticate.js';
+import { isValidContactId } from '../middleware/isValidContactId.js';
+import { upload } from '../middleware/multerUpload.js';
 
 
 const contactsRouter = Router();
@@ -33,18 +34,21 @@ contactsRouter.get(
 
 contactsRouter.post(
   '/',
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 
 contactsRouter.put(
   '/:contactId',
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(putContactController),
 );
 
 contactsRouter.patch(
   '/:contactId',
+  upload.single('photo'),
   validateBody(updateContactSchema),
   ctrlWrapper(patchContactController),
 );

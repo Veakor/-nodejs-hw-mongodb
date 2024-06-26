@@ -6,13 +6,14 @@ import {
   upsertsContact,
 } from '../servies/contacts.js';
 import createHttpError from 'http-errors';
-import { isValidContactId } from '../middleware/isValidContactId.js';
 import { parsePaginationPrams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
-
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { CLOUDINARY } from '../constants/constants.js';
+import { env } from '../utils/env.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 export const getContactsController = async (req, res) => {
-
   const { page, perPage } = parsePaginationPrams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
@@ -23,7 +24,7 @@ export const getContactsController = async (req, res) => {
     sortBy,
     sortOrder,
     filter,
-    userId: req.user_id,
+    userId: req.user._id,
   });
 
   res.json({
@@ -34,9 +35,12 @@ export const getContactsController = async (req, res) => {
 };
 
 export const getContactByIdController = async (req, res) => {
-  const contactId = isValidContactId(req, res);
+  const {
+    params: { contactId },
+    user: { _id: userId },
+  } = req;
 
-  const contact = await getContactById(contactId, req.user_id);
+  const contact = await getContactById(contactId, userId);
 
   if (!contact) {
     throw createHttpError(404, { message: 'Contact not found' });
@@ -50,8 +54,8 @@ export const getContactByIdController = async (req, res) => {
 };
 
 export const createContactController = async (req, res) => {
-  const { body, user } = req;
-  const contact = await createContact(body, user._id);
+  const { body, user, file } = req;
+  const contact = await createContact({ ...body, photo: file }, user._id);
 
   res.status(201).json({
     status: 201,
@@ -61,48 +65,78 @@ export const createContactController = async (req, res) => {
 };
 
 export const patchContactController = async (req, res) => {
-  const { body, user } = req;
-  const contactId = isValidContactId(req, res);
+  const { body } = req;
+  const {
+    params: { contactId },
+    user: { _id: userId },
+  } = req;
+  const photo = req.file;
 
-  const contact = await upsertsContact(contactId, user._id, body);
+  let photoUrl;
+
+  if (photo) {
+    if (env(CLOUDINARY.ENABLE_CLOUDINARY) === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const contact = await upsertsContact(contactId, userId, {
+    ...body,
+    photo: photoUrl.url,
+  });
 
   if (!contact.result) {
     throw createHttpError(404, { message: 'Contact not found' });
   }
 
-  const status = contact.isNew ? 201 : 200;
-
-  res.status(status).json({
-    status,
+  res.status(200).json({
+    status: 200,
     message: 'Successfully patched a contact!',
     data: contact.result,
   });
 };
 
 export const putContactController = async (req, res) => {
-  const { body, user } = req;
-  const contactId = isValidContactId(req, res);
+  const { body } = req;
+  const {
+    params: { contactId },
+    user: { _id: userId },
+  } = req;
+  const photo = req.file;
 
-  const contact = await upsertsContact(contactId, user._id, body, {
-    upsert: true,
+  let photoUrl;
+
+  if (photo) {
+    if (env(CLOUDINARY.ENABLE_CLOUDINARY) === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const contact = await upsertsContact(contactId, userId, {
+    ...body,
+    photo: photoUrl.url,
   });
 
   if (!contact.result) {
     throw createHttpError(404, { message: 'Contact not found' });
   }
 
-  const status = contact.isNew ? 201 : 200;
-
-  res.status(status).json({
-    status,
+  res.status(200).json({
+    status: 200,
     message: 'Successfully upserted contact!',
     data: contact.result,
   });
 };
 
 export const deleteContactByIdController = async (req, res) => {
-  const contactId = isValidContactId(req, res);
-  const userId = req.user._id;
+  const {
+    params: { contactId },
+    user: { _id: userId },
+  } = req;
 
   const contact = await deleteContactById(contactId, userId);
 
