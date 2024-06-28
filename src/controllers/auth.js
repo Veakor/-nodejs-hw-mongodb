@@ -24,7 +24,7 @@ const setupSession = (res, session) => {
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
 
-  res.json({
+  res.status(201).json({
     status: 201,
     message: 'Successfully registered a user!',
     data: { name: user.name, email: user.email },
@@ -73,8 +73,8 @@ export const logoutUserController = async (req, res) => {
 export const requestResetEmailController = async (req, res) => {
   await requestResetToken(req.body.email);
 
-  res.status(200).json({
-    status: 200,
+  res.status(201).json({
+    status: 201,
     message: 'Reset password email has been successfully sent.',
     data: {},
   });
