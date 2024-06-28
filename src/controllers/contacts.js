@@ -13,7 +13,9 @@ import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { CLOUDINARY } from '../constants/constants.js';
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-export const getContactsController = async (req, res) => {
+
+
+export const getContactsController = async (req, res, next) => {
   const { page, perPage } = parsePaginationPrams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
