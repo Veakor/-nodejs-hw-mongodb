@@ -8,7 +8,6 @@ import { errorHandler } from './middleware/errorHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 
-
 export const setupServer = () => {
   const app = express();
 
