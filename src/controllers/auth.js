@@ -4,10 +4,7 @@ import {
   logoutUser,
   refreshUser,
   registerUser,
-  requestResetToken,
-  resetPassword,
-} from '../serviсes/auth.js';
-import { createContact } from '../serviсes/contacts.js'; 
+} from '../serviсes/auth.js'; 
 
 
 const setupSession = (res, session) => {
@@ -70,53 +67,4 @@ export const logoutUserController = async (req, res) => {
   res.clearCookie('refreshToken');
 
   res.status(204).send();
-};
-export const requestResetEmailController = async (req, res) => {
-  await requestResetToken(req.body.email);
-
-  res.status(201).json({
-    status: 201,
-    message: 'Reset password email has been successfully sent.',
-    data: {},
-  });
-};
-
-export const resetPasswordController = async (req, res) => {
-  await resetPassword(req.body);
-
-  if (req.cookies.sessionId)
-    await logoutUser({
-      sessionId: req.cookies.sessionId,
-      refreshToken: req.cookies.refreshToken,
-    });
-
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
-
-  res.json({
-    status: 200,
-    message: 'Password has been successfully reset.',
-    data: {},
-  });
-};
-
-export const createContactController = async (req, res, next) => {
-  try {
-    const { body, file } = req;
-    if (!file) {
-      throw new Error('No file uploaded');
-    }
-    const { filename } = file;
-    const contactData = { ...body, photo: filename };
-
-    const contact = await createContact(contactData);
-
-    res.status(201).json({
-      status: 201,
-      message: 'Successfully created a contact!',
-      data: contact,
-    });
-  } catch (error) {
-    next(error);
-  }
 };
