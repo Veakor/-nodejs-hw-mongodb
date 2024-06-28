@@ -6,8 +6,8 @@ import {
   registerUser,
   requestResetToken,
   resetPassword,
-} from '../servies/auth.js';
-import { createContact } from '../servies/contacts.js'; 
+} from '../serviсes/auth.js';
+import { createContact } from '../serviсes/contacts.js'; 
 
 
 const setupSession = (res, session) => {

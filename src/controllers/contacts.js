@@ -4,7 +4,7 @@ import {
   getAllContacts,
   getContactById,
   upsertsContact,
-} from '../servies/contacts.js';
+} from '../serviсes/contacts.js';
 import createHttpError from 'http-errors';
 import { parsePaginationPrams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
@@ -36,7 +36,7 @@ export const getContactsController = async (req, res, next) => {
   });
 };
 
-export const getContactByIdController = async (req, res) => {
+export const getContactByIdController = async (req, res, next) => {
   const {
     params: { contactId },
     user: { _id: userId },
@@ -55,7 +55,7 @@ export const getContactByIdController = async (req, res) => {
   });
 };
 
-export const createContactController = async (req, res) => {
+export const createContactController = async (req, res, next) => {
   const { body, user, file } = req;
   const contact = await createContact({ ...body, photo: file }, user._id);
 
@@ -66,7 +66,7 @@ export const createContactController = async (req, res) => {
   });
 };
 
-export const patchContactController = async (req, res) => {
+export const patchContactController = async (req, res, next) => {
   const { body } = req;
   const {
     params: { contactId },
@@ -89,14 +89,14 @@ export const patchContactController = async (req, res) => {
     photo: photoUrl.url,
   });
 
-  if (!contact.result) {
+  if (!contact) {
     throw createHttpError(404, { message: 'Contact not found' });
   }
 
   res.status(200).json({
     status: 200,
     message: 'Successfully patched a contact!',
-    data: contact.result,
+    data: contact,
   });
 };
 
@@ -130,7 +130,7 @@ export const putContactController = async (req, res) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully upserted contact!',
-    data: contact.result,
+    data: contact,
   });
 };
 
