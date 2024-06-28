@@ -123,7 +123,7 @@ export const putContactController = async (req, res) => {
     photo: photoUrl.url,
   });
 
-  if (!contact.result) {
+  if (!contact) {
     throw createHttpError(404, { message: 'Contact not found' });
   }
 
