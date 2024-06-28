@@ -7,6 +7,7 @@ import {
   requestResetToken,
   resetPassword,
 } from '../servies/auth.js';
+import { createContact } from '../servies/contacts.js'; 
 
 
 const setupSession = (res, session) => {
@@ -97,4 +98,25 @@ export const resetPasswordController = async (req, res) => {
     message: 'Password has been successfully reset.',
     data: {},
   });
+};
+
+export const createContactController = async (req, res, next) => {
+  try {
+    const { body, file } = req;
+    if (!file) {
+      throw new Error('No file uploaded');
+    }
+    const { filename } = file;
+    const contactData = { ...body, photo: filename };
+
+    const contact = await createContact(contactData);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: contact,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
