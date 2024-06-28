@@ -73,7 +73,7 @@ export const upsertsContact = async (
   payload,
   options = {},
 ) => {
-  const result = await Contact.findByIdAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
     {
@@ -87,6 +87,6 @@ export const upsertsContact = async (
 };
 
 export const deleteContactById = async (contactId, userId) => {
-  const result = await Contact.findByIdAndDelete({ _id: contactId, userId });
+  const result = await Contact.findOneAndDelete({ _id: contactId, userId });
   return result;
 };
