@@ -11,6 +11,7 @@ export const createContactSchema = Joi.object({
     'any.required': '{{#label}} Is Required!',
     'string.min': 'Min string length is not achieved!',
     'string.max': 'Maximum string length exceeded!',
+    contentType: Joi.string().optional(),
   }),
   isFavourite: Joi.boolean(),
 });

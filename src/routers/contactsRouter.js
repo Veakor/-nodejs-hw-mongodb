@@ -13,6 +13,7 @@ import { validateBody } from '../middleware/validateBody.js';
 import { createContactSchema } from '../validation/createContactSchema.js';
 import { updateContactSchema } from '../validation/updateContactSchema.js';
 import { authenticate } from '../middleware/authenticate.js';
+import { isValidContactId } from '../middleware/isValidContactId.js';
 
 
 
@@ -20,7 +21,7 @@ import { authenticate } from '../middleware/authenticate.js';
 
 const contactsRouter = Router();
 
-contactsRouter.use('/', authenticate)
+contactsRouter.use('/', authenticate);
 
 
 contactsRouter.get(
@@ -30,6 +31,7 @@ contactsRouter.get(
 
 contactsRouter.get(
   '/:contactId',
+  isValidContactId,
   ctrlWrapper(getContactByIdController),
 );
 
