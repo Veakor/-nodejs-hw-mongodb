@@ -1,0 +1,74 @@
+import { Contact } from '../db/modal/contact.js';
+import {SORT_ORDER} from '../db/modal/contact.js';
+import { createPaginationData } from '../utils/createPaginationData.js';
+
+export const getAllContacts = async ({
+  page = 1,
+  perPage = 10,
+  sortOrder = SORT_ORDER.ASC,
+  sortBy = '_id',
+  filter = {},
+}) => {
+  const limit = perPage;
+  const skip = (page - 1) * perPage;
+  const contactQuery = Contact.find();
+
+  if (filter.contactType) {
+    contactQuery.where('contactType').equals(filter.contactType);
+  }
+  if (typeof filter.isFavourite === 'boolean') {
+    contactQuery.where('isFavourite').equals(filter.isFavourite);
+  }
+ 
+ try{
+
+const [contactCount, contacts] = await Promise.all([
+  Contact.find().merge(contactQuery).countDocuments(),
+  Contact.find()
+    .merge(contactQuery)
+    .skip(skip)
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder })
+    .exec(),
+]);
+
+  const paginationData = createPaginationData(contactCount, perPage, page);
+
+  console.log('Contacts found:', contacts); 
+
+  return {
+    data: contacts,
+    ...paginationData,
+  };
+} catch (error) {
+    console.error('Error fetching contacts:', error);
+    throw error;
+  }
+};
+
+export const getContactById =  (id) => {
+  const contact = Contact.findById(id);
+  return contact;
+};
+
+export const createContact = (payload) => {
+  const contact = Contact.create(payload);
+  return contact;
+};
+
+export const upsertsContact = async (id, payload, options ={}) => {
+  const result = await Contact.findByIdAndUpdate(id, payload, {
+    new: true,
+    includesResultMetadata: true,
+    ...options,
+  });
+  return {
+    result
+  };
+};
+
+
+export const deleteContactById = async (contactId) => {
+  const result = await Contact.findByIdAndDelete(contactId);
+  return result;
+};
